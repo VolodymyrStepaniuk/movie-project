@@ -1,0 +1,12 @@
+body{
+  font-family: 'Montserrat', sans-serif;
+  background-color: #161b22;
+  padding-top: 55px;
+  overflow-y: scroll; /* Або auto, щоб дозволити прокрутку тільки при необхідності */
+  -ms-overflow-style: none; /* Приховати скролбар для IE та Edge */
+  scrollbar-width: none; /* Приховати скролбар для сучасних браузерів */
+}
+
+body::-webkit-scrollbar {
+  display: none; /* Приховати скролбар для WebKit (Chrome, Safari, Opera) */
+}
