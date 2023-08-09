@@ -34,7 +34,7 @@ const Navbar = () => {
           </div>
           <div>
             <a href="/login" className="text-decoration-none text-reset">
-              <span className="me-3 fw-bold">Увійти</span>
+              <span className="me-3 fw-bold d-none d-md-block">Увійти</span>
             </a>
           </div>
           <div
@@ -75,6 +75,24 @@ const Navbar = () => {
                 <li className="nav-item">
                   <a className="nav-link active" aria-current="page" href="#">
                     Купити квиток
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a
+                    className="nav-link active"
+                    aria-current="page"
+                    href="/search"
+                  >
+                    Каталог фільмів
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a
+                    className="nav-link active fw-bold d-block d-md-none"
+                    aria-current="page"
+                    href="#"
+                  >
+                    Увійти
                   </a>
                 </li>
               </ul>

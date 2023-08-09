@@ -19,21 +19,29 @@ const Search = () => {
   const [movies, setMovies] = useState<MovieModel[]>([]);
 
   //Pagination realisation
+  const moviesPerPage = 2;
   const [currentPage, setCurrentPage] = useState(1);
-  const [moviesPerPage] = useState(3);
-  // const [totalAmountOfMovies, setTotalAmountOfMovies] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  //Search by title
+  const [search, setSearch] = useState("");
+  const [searchUrl, setSearchUrl] = useState("");
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
+
   //
   useEffect(() => {
     const fetchMovies = async () => {
       const baseUrl: string = "http://localhost:8080/api/movie";
-      const url: string = `${baseUrl}?page=${
-        currentPage - 1
-      }&size=${moviesPerPage}`;
+      const url =
+        searchUrl === ""
+          ? `${baseUrl}?page=${currentPage - 1}&size=${moviesPerPage}`
+          : `${baseUrl}${searchUrl.replace(
+              "<pageNumber>",
+              `${currentPage - 1}`
+            )}`;
+
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Something went wrong!");
@@ -42,7 +50,6 @@ const Search = () => {
       const responseData = responseJson.content;
 
       setTotalPages(responseJson.totalPages);
-      // setTotalAmountOfMovies(responseJson.totalElements);
 
       const loadedMovies: MovieModel[] = [];
       for (const key in responseData) {
@@ -68,7 +75,16 @@ const Search = () => {
       console.log(error.message);
     });
     window.scrollTo(0, 0);
-  }, [currentPage]);
+  }, [currentPage, searchUrl]);
+
+  const searchHandleChange = () => {
+    setCurrentPage(1);
+    search === ""
+      ? setSearch("")
+      : setSearchUrl(
+          `/searchByTitle?title=${search}&page=<pageNumber>&size=${moviesPerPage}`
+        );
+  };
 
   return (
     <div className="container">
@@ -81,8 +97,16 @@ const Search = () => {
                 type="search"
                 placeholder="Search"
                 aria-labelledby="Search"
+                onChange={(e) => setSearch(e.target.value)}
               />
-              <button className="btn btn-outline-success">Search</button>
+              <button
+                className="btn btn-outline-success"
+                onClick={() => {
+                  searchHandleChange();
+                }}
+              >
+                Search
+              </button>
               <div className="mx-2 d-none d-lg-block">
                 <div className="dropdown justify-content-center">
                   <button
