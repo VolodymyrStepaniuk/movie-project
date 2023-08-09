@@ -11,7 +11,7 @@ const SearchMovie: React.FC<{ movie: MovieModel }> = (props) => {
       : props.movie.description;
 
   return (
-    <div id="Request" className="request-section">
+    <div className="">
       <div className="card bg-dark text-white w-75 mb-3 mx-auto">
         <div className="row g-0">
           <div className="col-md-3">

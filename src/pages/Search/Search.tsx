@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import MovieModel from "../../models/MovieModel";
 import SearchMovie from "../../components/Search/SearchMovie";
+import Pagination from "../../components/Universal/Utils/Pagination";
 
 const Search = () => {
   const movieGenres: string[] = [
@@ -17,30 +18,46 @@ const Search = () => {
   ];
   const [movies, setMovies] = useState<MovieModel[]>([]);
 
+  //Pagination realisation
+  const [currentPage, setCurrentPage] = useState(1);
+  const [moviesPerPage] = useState(3);
+  // const [totalAmountOfMovies, setTotalAmountOfMovies] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+  //
   useEffect(() => {
     const fetchMovies = async () => {
       const baseUrl: string = "http://localhost:8080/api/movie";
-      const url: string = `${baseUrl}/page?page=0&size=9`;
+      const url: string = `${baseUrl}?page=${
+        currentPage - 1
+      }&size=${moviesPerPage}`;
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Something went wrong!");
       }
       const responseJson = await response.json();
+      const responseData = responseJson.content;
+
+      setTotalPages(responseJson.totalPages);
+      // setTotalAmountOfMovies(responseJson.totalElements);
 
       const loadedMovies: MovieModel[] = [];
-      for (const key in responseJson) {
+      for (const key in responseData) {
         loadedMovies.push(
           new MovieModel(
-            responseJson[key].id,
-            responseJson[key].title,
-            responseJson[key].year,
-            responseJson[key].production,
-            responseJson[key].genres,
-            responseJson[key].director,
-            responseJson[key].duration,
-            responseJson[key].language,
-            responseJson[key].description,
-            `${baseUrl}/${responseJson[key].id}/image`
+            responseData[key].id,
+            responseData[key].title,
+            responseData[key].year,
+            responseData[key].production,
+            responseData[key].genres,
+            responseData[key].director,
+            responseData[key].duration,
+            responseData[key].language,
+            responseData[key].description,
+            `${baseUrl}/${responseData[key].id}/image`
           )
         );
       }
@@ -50,7 +67,9 @@ const Search = () => {
     fetchMovies().catch((error: any) => {
       console.log(error.message);
     });
-  }, []);
+    window.scrollTo(0, 0);
+  }, [currentPage]);
+
   return (
     <div className="container">
       <div>
@@ -80,7 +99,7 @@ const Search = () => {
                     aria-labelledby="dropdownMenuButton1"
                   >
                     {movieGenres.map((movieGenre) => (
-                      <li>
+                      <li key={movieGenres.indexOf(movieGenre)}>
                         <a className="dropdown-item" href="/">
                           {movieGenre}
                         </a>
@@ -97,6 +116,11 @@ const Search = () => {
           <SearchMovie movie={movie} key={movie.id} />
         ))}
       </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        paginate={handlePageChange}
+      />
     </div>
   );
 };
