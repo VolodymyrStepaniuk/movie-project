@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import MovieModel from "../../models/MovieModel";
 import SearchMovie from "../../components/Search/SearchMovie";
 import Pagination from "../../components/Universal/Utils/Pagination";
+import NoMoviesFound from "../../components/Universal/Utils/NoMoviesFound";
 
 const Search = () => {
   const movieGenres: string[] = [
@@ -19,13 +20,15 @@ const Search = () => {
   const [movies, setMovies] = useState<MovieModel[]>([]);
 
   //Pagination realisation
-  const moviesPerPage = 2;
+  const moviesPerPage = 3;
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [totalAmountOfMovies, setTotalAmountOfMovies] = useState(0);
   //Search by title
   const [search, setSearch] = useState("");
   const [searchUrl, setSearchUrl] = useState("");
-
+  //Seacrh by genre
+  const [genreSelection, setGenreSelection] = useState("Movie genre");
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
@@ -41,7 +44,6 @@ const Search = () => {
               "<pageNumber>",
               `${currentPage - 1}`
             )}`;
-
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Something went wrong!");
@@ -50,6 +52,7 @@ const Search = () => {
       const responseData = responseJson.content;
 
       setTotalPages(responseJson.totalPages);
+      setTotalAmountOfMovies(responseJson.totalElements);
 
       const loadedMovies: MovieModel[] = [];
       for (const key in responseData) {
@@ -69,7 +72,6 @@ const Search = () => {
         );
       }
       setMovies(loadedMovies);
-      console.log(loadedMovies);
     };
     fetchMovies().catch((error: any) => {
       console.log(error.message);
@@ -80,10 +82,27 @@ const Search = () => {
   const searchHandleChange = () => {
     setCurrentPage(1);
     search === ""
-      ? setSearch("")
+      ? (setSearchUrl(""), setGenreSelection("ALL"))
       : setSearchUrl(
-          `/searchByTitle?title=${search}&page=<pageNumber>&size=${moviesPerPage}`
+          `/title?title=${search}&page=<pageNumber>&size=${moviesPerPage}`
         );
+  };
+
+  const genreHandleChange = (genre: string) => {
+    setGenreSelection(genre);
+    setCurrentPage(1);
+    if (genre !== "ALL") {
+      const selectedGenreMovies = movieGenres.filter(
+        (movieGenre) => movieGenre === genre
+      );
+      if (selectedGenreMovies.length > 0) {
+        setSearchUrl(
+          `/genre?genre=${genre}&page=<pageNumber>&size=${moviesPerPage}`
+        );
+      }
+    } else {
+      setSearchUrl(`?page=<pageNumber>&size=${moviesPerPage}`);
+    }
   };
 
   return (
@@ -116,15 +135,20 @@ const Search = () => {
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                   >
-                    Category
+                    {genreSelection}
                   </button>
                   <ul
                     className="dropdown-menu"
                     aria-labelledby="dropdownMenuButton1"
                   >
                     {movieGenres.map((movieGenre) => (
-                      <li key={movieGenres.indexOf(movieGenre)}>
-                        <a className="dropdown-item" href="/">
+                      <li
+                        key={movieGenres.indexOf(movieGenre)}
+                        onClick={() => {
+                          genreHandleChange(movieGenre);
+                        }}
+                      >
+                        <a className="dropdown-item" href="#">
                           {movieGenre}
                         </a>
                       </li>
@@ -135,10 +159,16 @@ const Search = () => {
             </div>
           </div>
         </div>
-        <div className="mt-3"></div>
-        {movies.map((movie) => (
-          <SearchMovie movie={movie} key={movie.id} />
-        ))}
+        {totalAmountOfMovies > 0 ? (
+          <>
+            <div className="mt-3"></div>
+            {movies.map((movie) => (
+              <SearchMovie movie={movie} key={movie.id} />
+            ))}
+          </>
+        ) : (
+          <NoMoviesFound />
+        )}
       </div>
       <Pagination
         currentPage={currentPage}

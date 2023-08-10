@@ -10,7 +10,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="navbar fixed-top bg-custom p-0">
+      <nav className="navbar navbar-dark fixed-top bg-custom p-0">
         <div className="container-fluid d-flex justify-content-between align-items-center">
           <div>
             <button
@@ -34,11 +34,13 @@ const Navbar = () => {
           </div>
           <div>
             <a href="/login" className="text-decoration-none text-reset">
-              <span className="me-3 fw-bold d-none d-md-block">Увійти</span>
+              <span className="me-3 fw-bold d-none d-md-block text-white">
+                Увійти
+              </span>
             </a>
           </div>
           <div
-            className="offcanvas offcanvas-start"
+            className="offcanvas offcanvas-start bg-custom"
             tabIndex={-1}
             id="offcanvasNavbar"
             aria-labelledby="offcanvasNavbarLabel"
@@ -63,30 +65,42 @@ const Navbar = () => {
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link active" aria-current="page" href="#">
+                  <a
+                    className="nav-link active text-white"
+                    aria-current="page"
+                    href="#"
+                  >
                     Зараз у прокаті
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link active" aria-current="page" href="#">
+                  <a
+                    className="nav-link active text-white"
+                    aria-current="page"
+                    href="#"
+                  >
                     Огляди
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link active" aria-current="page" href="#">
+                  <a
+                    className="nav-link active text-white"
+                    aria-current="page"
+                    href="#"
+                  >
                     Купити квиток
                   </a>
                 </li>
                 <li className="nav-item">
                   <a
-                    className="nav-link active"
+                    className="nav-link active text-white"
                     aria-current="page"
                     href="/search"
                   >
                     Каталог фільмів
                   </a>
                 </li>
-                <li className="nav-item">
+                <li className="nav-item text-white">
                   <a
                     className="nav-link active fw-bold d-block d-md-none"
                     aria-current="page"
