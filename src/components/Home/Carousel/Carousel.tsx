@@ -2,10 +2,12 @@ import Movie from "./Movie";
 import "./Carousel.css";
 import MovieModel from "../../../models/MovieModel";
 import { useState, useEffect } from "react";
+import SpinnerLoading from "../../Universal/Utils/SpinnerLoading";
 
 const Carousel = () => {
   //
   const [movies, setMovies] = useState<MovieModel[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -36,9 +38,11 @@ const Carousel = () => {
         );
       }
       setMovies(loadedMovies);
+      setIsLoading(false);
       console.log(loadedMovies);
     };
     fetchMovies().catch((error: any) => {
+      setIsLoading(false);
       console.log(error.message);
     });
   }, []);
@@ -60,6 +64,9 @@ const Carousel = () => {
 
   const moviesPerSlide = windowWidth < 768 ? 1 : 4; // 1 movie on small screens, 3 on larger screens
 
+  if (isLoading) {
+    return <SpinnerLoading />;
+  }
   return (
     <div className="container-fluid mt-5" style={{ height: 500 }}>
       <div

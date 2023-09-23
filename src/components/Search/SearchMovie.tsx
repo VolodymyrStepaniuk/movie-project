@@ -42,7 +42,7 @@ const SearchMovie: React.FC<{ movie: MovieModel }> = (props) => {
               </p>
               <div className="d-flex justify-content-end align-items-end">
                 <a
-                  href="/"
+                  href={`/movie/${props.movie.id}`}
                   className="fw-bold text-center text-reset text-decoration-none mb-4 me-4"
                 >
                   View more

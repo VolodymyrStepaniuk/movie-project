@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import MovieModel from "../../models/MovieModel";
 import SearchMovie from "../../components/Search/SearchMovie";
 import Pagination from "../../components/Universal/Utils/Pagination";
-import NoMoviesFound from "../../components/Universal/Utils/NoMoviesFound";
+import CustomError from "../../components/Universal/Utils/CustomError";
+import SpinnerLoading from "../../components/Universal/Utils/SpinnerLoading";
 
 const Search = () => {
   const movieGenres: string[] = [
@@ -18,7 +19,8 @@ const Search = () => {
     "ANIMATION",
   ];
   const [movies, setMovies] = useState<MovieModel[]>([]);
-
+  const [httpError, setHttpError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   //Pagination realisation
   const moviesPerPage = 3;
   const [currentPage, setCurrentPage] = useState(1);
@@ -45,10 +47,11 @@ const Search = () => {
               `${currentPage - 1}`
             )}`;
       const response = await fetch(url);
+      const responseJson = await response.json();
       if (!response.ok) {
+        setHttpError(responseJson);
         throw new Error("Something went wrong!");
       }
-      const responseJson = await response.json();
       const responseData = responseJson.content;
 
       setTotalPages(responseJson.totalPages);
@@ -72,8 +75,10 @@ const Search = () => {
         );
       }
       setMovies(loadedMovies);
+      setIsLoading(false);
     };
     fetchMovies().catch((error: any) => {
+      setIsLoading(false);
       console.log(error.message);
     });
     window.scrollTo(0, 0);
@@ -104,6 +109,14 @@ const Search = () => {
       setSearchUrl(`?page=<pageNumber>&size=${moviesPerPage}`);
     }
   };
+
+  if (isLoading) {
+    return <SpinnerLoading />;
+  }
+
+  if (httpError) {
+    return <CustomError error={httpError} />;
+  }
 
   return (
     <div className="container">
@@ -159,16 +172,10 @@ const Search = () => {
             </div>
           </div>
         </div>
-        {totalAmountOfMovies > 0 ? (
-          <>
-            <div className="mt-3"></div>
-            {movies.map((movie) => (
-              <SearchMovie movie={movie} key={movie.id} />
-            ))}
-          </>
-        ) : (
-          <NoMoviesFound />
-        )}
+        <div className="mt-3"></div>
+        {movies.map((movie) => (
+          <SearchMovie movie={movie} key={movie.id} />
+        ))}
       </div>
       <Pagination
         currentPage={currentPage}
