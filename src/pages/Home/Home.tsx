@@ -4,8 +4,8 @@ import Intro from "../../components/Home/Intro/Intro";
 const Home = () => {
   return (
     <>
-      <Intro />
       <Carousel />
+      {/* <Intro /> */}
     </>
   );
 };
