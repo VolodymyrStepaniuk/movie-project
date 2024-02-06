@@ -8,7 +8,8 @@ import Search from "./pages/Search/Search";
 import Footer from "./components/Universal/Footer/Footer";
 import Line from "./components/Universal/Line/Line";
 import Navbar from "./components/Universal/Navbar/Navbar";
-import MovieCheckout from "./components/MovieCheckout/MovieCheckout";
+import MoviePage from "./pages/Movie/MoviePage";
+
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
           <Route path="/search" element={<Search />} />
           <Route path="/login" element={<Login />} />
           <Route path="/registration" element={<Registration />} />
-          <Route path="/movie/:movieId" element={<MovieCheckout />} />
+          <Route path="/movie/:movieId" element={<MoviePage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <Line />
