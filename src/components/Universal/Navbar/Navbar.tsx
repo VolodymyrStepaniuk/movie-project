@@ -33,11 +33,11 @@ const Navbar = () => {
             </a>
           </div>
           <div>
-            <a href="/login" className="text-decoration-none text-reset">
+            {/* <a href="/login" className="text-decoration-none text-reset">
               <span className="me-3 fw-bold d-none d-md-block text-white">
                 Увійти
               </span>
-            </a>
+            </a> */}
           </div>
           <div
             className="offcanvas offcanvas-start bg-custom"
@@ -45,7 +45,7 @@ const Navbar = () => {
             id="offcanvasNavbar"
             aria-labelledby="offcanvasNavbarLabel"
           >
-            <div className="offcanvas-header">
+            <div className="offcanvas-header d-flex justify-content-end">
               <button
                 type="button"
                 className="btn-close"
@@ -100,7 +100,7 @@ const Navbar = () => {
                     Каталог фільмів
                   </a>
                 </li>
-                <li className="nav-item text-white">
+                {/* <li className="nav-item text-white">
                   <a
                     className="nav-link active fw-bold d-block d-md-none"
                     aria-current="page"
@@ -108,7 +108,7 @@ const Navbar = () => {
                   >
                     Увійти
                   </a>
-                </li>
+                </li> */}
               </ul>
             </div>
           </div>
