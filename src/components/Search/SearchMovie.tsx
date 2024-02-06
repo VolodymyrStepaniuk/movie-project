@@ -9,16 +9,18 @@ const SearchMovie: React.FC<{ movie: MovieModel }> = (props) => {
     props.movie.description.length > MAX_DESCRIPTION_LENGTH
       ? props.movie.description.substring(0, MAX_DESCRIPTION_LENGTH) + "..."
       : props.movie.description;
-
+  const movie = props.movie;
+  const movieImages = movie.imageUrls;
+  
   return (
     <div className="">
       <div className="card bg-dark text-white w-75 mb-3 mx-auto">
         <div className="row g-0">
           <div className="col-md-3">
-            {props.movie.imgUrl ? (
+            {movieImages ? (
               <img
                 className="card-img h-100"
-                src={props.movie.imgUrl}
+                src={movieImages[0]}
                 alt="movie"
               />
             ) : (
