@@ -31,15 +31,10 @@ const Intro = () => {
       <div className="row justify-content-center align-items-center">
         <div className="col-md-7">
           <div className="text-center text-white">
-            <h1 className="fw-bold">Як працює Multiplex?</h1>
+            <h1 className="fw-bold">Як працює VS Video?</h1>
             <p className="fw-bold">
-              Simply. Choose a car. We will arrange a detailed inspection. Based
-              on that you can decide whether you want the car. We then buy it,
-              arrange an extended warranty, register it, and deliver it to you.
+             Дуже просто. Ви можете обрати один з фільмів які є на нашій платформі, та орендувати його для перегляду. Ви можете переглянути фільм в будь-який час, та в будь-якому місці. Вам лише потрібно зареєструватись на нашому сайті, та ви зможете насолоджуватись переглядом фільмів.
             </p>
-            <a href="#" className="btn btn-outline-light btn-lg">
-              <DownArrowIcon />I want to know more
-            </a>
           </div>
         </div>
       </div>
