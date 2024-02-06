@@ -3,15 +3,17 @@ import "./Carousel.css";
 import MovieModel from "../../../models/MovieModel";
 import { useState, useEffect } from "react";
 import SpinnerLoading from "../../Universal/Utils/SpinnerLoading";
+import { BASE_URL } from "../../../constants/BASE_URL";
 
 const Carousel = () => {
   //
   const [movies, setMovies] = useState<MovieModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
     const fetchMovies = async () => {
-      const baseUrl: string = "http://localhost:8080/api/movie";
+      const baseUrl: string = BASE_URL + "/movie";
       const url: string = `${baseUrl}?page=0&size=9`;
       const response = await fetch(url);
       if (!response.ok) {
@@ -26,17 +28,21 @@ const Carousel = () => {
           new MovieModel(
             responseData[key].id,
             responseData[key].title,
+            responseData[key].requiredAge,
             responseData[key].year,
-            responseData[key].production,
+            responseData[key].producingCountries,
             responseData[key].genres,
-            responseData[key].director,
+            responseData[key].directors,
             responseData[key].duration,
             responseData[key].language,
             responseData[key].description,
-            `${baseUrl}/${responseData[key].id}/image`
+            responseData[key].trailerUrl,
+            responseData[key].videoUrl,
+            responseData[key].imageUrls
           )
         );
       }
+
       setMovies(loadedMovies);
       setIsLoading(false);
       console.log(loadedMovies);
@@ -62,13 +68,29 @@ const Carousel = () => {
     };
   }, []);
 
-  const moviesPerSlide = windowWidth < 768 ? 1 : 4; // 1 movie on small screens, 3 on larger screens
+  const moviesPerSlide =
+  windowWidth < 768 ? 1 :
+  windowWidth < 992 ? 3 : 4;
+
+  const showCarouselControls = movies.length > 3;
+
+  const handleNext = () => {
+    setCurrentSlide((currentSlide + 1) % movies.length);
+  };
+
+  const handlePrev = () => {
+    setCurrentSlide((currentSlide - 1 + movies.length) % movies.length);
+  };
 
   if (isLoading) {
     return <SpinnerLoading />;
   }
+
   return (
-    <div className="container-fluid mt-5" style={{ height: 500 }}>
+    <div className="container-fluid mt-3 mb-3 bg-color-gray">
+      <h1 className="fw-bold text-center text-white ">
+        Новинки світового прокату:
+      </h1>
       <div
         id="carouselExampleControls"
         className="carousel slide d-flex align-items-center"
@@ -77,67 +99,39 @@ const Carousel = () => {
         <div className="carousel-inner">
           <div className="carousel-item active">
             <div className="row d-flex justify-content-center align-items-center">
-              {movies.slice(0, 1).map((movie) => (
-                <Movie movie={movie} key={movie.id} />
-              ))}
-              {movies
-                .slice(1, 3)
-                .map(
-                  (movie) =>
-                    moviesPerSlide > 1 && <Movie movie={movie} key={movie.id} />
-                )}
+              {Array.from({ length: moviesPerSlide }).map((_, i) => {
+                const movie = movies[(currentSlide + i) % movies.length];
+
+                return <Movie movie={movie} key={movie.id} />;
+              })}
             </div>
           </div>
-          <div className="carousel-item">
-            <div className="row d-flex justify-content-center align-items-center">
-              {movies.slice(3, 4).map((movie) => (
-                <Movie movie={movie} key={movie.id} />
-              ))}
-              {movies
-                .slice(4, 6)
-                .map(
-                  (movie) =>
-                    moviesPerSlide > 1 && <Movie movie={movie} key={movie.id} />
-                )}
-            </div>
-          </div>
-          <div className="carousel-item">
-            <div className="row d-flex justify-content-center align-items-center">
-              {movies.slice(6, 7).map((movie) => (
-                <Movie movie={movie} key={movie.id} />
-              ))}
-              {movies
-                .slice(7, 9)
-                .map(
-                  (movie) =>
-                    moviesPerSlide > 1 && <Movie movie={movie} key={movie.id} />
-                )}
-            </div>
-          </div>
-          <button
-            className="carousel-control-prev"
-            type="button"
-            data-bs-target="#carouselExampleControls"
-            data-bs-slide="prev"
-          >
-            <span
-              className="carousel-control-prev-icon"
-              aria-hidden="true"
-            ></span>
-            <span className="visually-hidden">Previous</span>
-          </button>
-          <button
-            className="carousel-control-next"
-            type="button"
-            data-bs-target="#carouselExampleControls"
-            data-bs-slide="next"
-          >
-            <span
-              className="carousel-control-next-icon"
-              aria-hidden="true"
-            ></span>
-            <span className="visually-hidden">Next</span>
-          </button>
+          {showCarouselControls && (
+            <>
+              <button
+                className="carousel-control-prev"
+                type="button"
+                onClick={handlePrev}
+              >
+                <span
+                  className="carousel-control-prev-icon"
+                  aria-hidden="true"
+                ></span>
+                <span className="visually-hidden">Previous</span>
+              </button>
+              <button
+                className="carousel-control-next"
+                type="button"
+                onClick={handleNext}
+              >
+                <span
+                  className="carousel-control-next-icon"
+                  aria-hidden="true"
+                ></span>
+                <span className="visually-hidden">Next</span>
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>
